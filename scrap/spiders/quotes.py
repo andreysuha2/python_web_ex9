@@ -1,5 +1,5 @@
 import scrapy
-
+from scrap.store import authors_urls
 
 class QuotesSpider(scrapy.Spider):
     name = "quotes"
@@ -9,6 +9,7 @@ class QuotesSpider(scrapy.Spider):
 
     def parse(self, response):
         for quote in response.xpath("/html//div[@class='quote']"):
+            authors_urls.add(quote.xpath("span/a/@href").get())
             yield {
                 "quote": quote.xpath("span[@class='text']/text()").get(),
                 "tags": quote.xpath("div[@class='tags']/a/text()").extract(),
